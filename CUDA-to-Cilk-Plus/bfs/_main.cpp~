@@ -8,8 +8,6 @@
 #include "lonestargpu.h"
 #include "bfs_worklistc.h"
 
-//
-
 //--------------------------------------------------------------------------------------------
 // -Verifying the solution
 
