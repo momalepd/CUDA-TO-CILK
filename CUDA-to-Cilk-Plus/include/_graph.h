@@ -1,3 +1,4 @@
+
 #ifndef LSG_GRAPH
 #define LSG_GRAPH
 
@@ -7,44 +8,11 @@
 
 //-----------------------------------------------------------------------------------------
 
-typedef struct Graph {
+class Graph {
+	
 	enum {NotAllocated, AllocatedOnHost} memory;
 
-	unsigned read(char file[]);
-	unsigned optimize();
-	unsigned printStats();
-	void     print();
-
-	Graph();
-	~Graph();
-	unsigned init();
-	unsigned allocOnHost();
-	unsigned dealloc();
-	unsigned deallocOnHost();
-	unsigned optimizeone();
-	unsigned optimizetwo();
-	void progressPrint(unsigned maxii, unsigned ii);
-	unsigned readFromEdges(char file[]);
-	unsigned readFromGR(char file[]);
-
-	void printStats1x1();
-	void print1x1();
-	unsigned getOutDegree(unsigned src);
-	unsigned getInDegree(unsigned src);
-	unsigned getDestination(unsigned src, unsigned nthedge);
-	foru    getWeight(unsigned src, unsigned nthedge);
-	unsigned getMinEdge(unsigned src);
-
-	unsigned getFirstEdge(unsigned src);
-	void computeStats();
-	bool computeLevels();
-	unsigned findMaxLevel();
-	void computeDiameter();
-	void computeInOut();
-	void initLevels();
-
-
-	unsigned nnodes, nedges;
+	
 	unsigned *noutgoing, *nincoming, *srcsrc, *psrc, *edgessrcdst;
 	foru *edgessrcwt;
 	unsigned *levels;
@@ -54,7 +22,43 @@ typedef struct Graph {
 	unsigned diameter;
 	bool foundStats;
 
-} Graph;
+	public :
+		unsigned nnodes, nedges;
+
+		unsigned read(char file[]);
+		unsigned optimize();
+		unsigned printStats();
+		void     print();
+
+		Graph();
+		~Graph();
+		unsigned init();
+		unsigned allocOnHost();
+		unsigned dealloc();
+		unsigned deallocOnHost();
+		unsigned optimizeone();
+		unsigned optimizetwo();
+		void progressPrint(unsigned maxii, unsigned ii);
+		unsigned readFromEdges(char file[]);
+		unsigned readFromGR(char file[]);
+
+		void printStats1X1();
+		void print1x1();
+		unsigned getOutDegree(unsigned src);
+		unsigned getInDegree(unsigned src);
+		unsigned getDestination(unsigned src, unsigned nthedge);
+		foru    getWeight(unsigned src, unsigned nthedge);
+		unsigned getMinEdge(unsigned src);
+
+		unsigned getFirstEdge(unsigned src);
+		void computeStats();
+		bool computeLevels();
+		unsigned findMaxLevel();
+		void computeDiameter();
+		void computeInOut();
+		void initLevels();
+
+} ;
 
 
 //-----------------------------------------------------------------------------------------
@@ -68,6 +72,8 @@ Graph::~Graph() {
 	//dealloc();
 	//init();
 }
+
+
 
 //-----------------------------------------------------------------------------------------
 // Initialising all the data 
@@ -295,9 +301,9 @@ foru Graph::getWeight(unsigned src, unsigned nthedge) {
 			return edgessrcwt[edge];
 		}
 
-		return MYINFINITY;
+		return MY_INFINITY;
 	}
-	return MYINFINITY;
+	return MY_INFINITY;
 }
 
 unsigned Graph::getFirstEdge(unsigned src) {
@@ -422,7 +428,7 @@ unsigned Graph::optimizeone() {
 		unsigned src = srcsrc[ii];
 		unsigned dstindex = psrc[src];
 		unsigned degree = noutgoing[src];
-		if (degree && srcsrc[edgessrcdst[dstindex]] > src + DISTANCETHRESHOLD) {
+		if (degree && srcsrc[edgessrcdst[dstindex]] > src + DISTANCE_THRESHOLD) {
 			unsigned int nee = degree;
 			for (unsigned ee = 0; ee < nee; ++ee) {
 				unsigned dst = edgessrcdst[dstindex + ee];
@@ -461,7 +467,7 @@ unsigned Graph::optimizetwo() {
 		unsigned degreeone = noutgoing[one];
 		unsigned degreetwo = noutgoing[two];
 
-		if (degreeone > degreetwo && degreeone - degreetwo > THRESHOLDDEGREE && !firsthalfsmaller || degreetwo > degreeone && degreetwo - degreeone > THRESHOLDDEGREE && firsthalfsmaller) {
+		if (degreeone > degreetwo && degreeone - degreetwo > THRESHOLD_DEGREE && !firsthalfsmaller || degreetwo > degreeone && degreetwo - degreeone > THRESHOLD_DEGREE && firsthalfsmaller) {
 			temp = srcsrc[one];
 			srcsrc[one] = srcsrc[two];
 			srcsrc[two] = temp;
@@ -485,7 +491,7 @@ unsigned Graph::optimizetwo() {
 
 
 unsigned Graph::printStats() {
-	initlevels();
+	initLevels();
 
 	unsigned intzero = 0;
 	
@@ -511,20 +517,20 @@ unsigned Graph::printStats() {
 	cudaFree(changed);
 	*/
 
-	printstats1X1();
+	printStats1X1();
 	return 0;
 }
 
 // Initiallising levels
 void Graph::initLevels() {
 
-	cilk_for (int id=0 ; id<nnodes ; id++){}
+	cilk_for (int id=0 ; id<nnodes ; id++){
 		levels[id] = nnodes;
 	}
 }
 
 
-void Graph::printStats1x1() {	// 1x1.
+void Graph::printStats1X1() {	// 1x1.
 	char prefix[] = "\t";
 
 	computeStats();
@@ -600,6 +606,7 @@ __device__ bool Graph::computeLevels() {
 */
 
 //-----------------------------------------------------------------------------------------
+
 
 #endif
 

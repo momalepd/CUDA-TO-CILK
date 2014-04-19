@@ -4,9 +4,11 @@
 	- This is a plain transformation of CUDA BFS to Cilk Plus.
 */
 
-
-#include "lonestargpu.h"
-#include "bfs_worklistc.h"
+#include <cilk/cilk.h>
+#include <cilk/cilk_api.h>
+#include <cilk/reducer_opadd.h>
+#include "_lonestargpu.h"
+//#include "_bfs_worklistc.h"
 
 //
 
@@ -72,13 +74,12 @@ int main(int argc, char *argv[]) {
 
 	hgraph.read(argv[1]);  // Read give file into graph Data Structure
 
-	dist = (foru *)malloc(graph.nnodes * sizeof(foru));
+	dist = (foru *)malloc(hgraph.nnodes * sizeof(foru));
 
-	bfs(hgraph, dist);   // Main BFS execution
+	//bfs(hgraph, dist);   // Main BFS execution
 
 	printf("verifying.\n");
-	verifysolution (dist, graph, nerr);
-	printf("\tno of errors = %d.\n", nerr.get_value());
+	verifysolution (dist, hgraph, nerr);
 
 	write_solution("bfs-output.txt", hgraph, dist);
 
@@ -86,5 +87,3 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-
-

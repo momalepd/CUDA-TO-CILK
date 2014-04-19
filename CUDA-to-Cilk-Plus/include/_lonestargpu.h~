@@ -3,7 +3,7 @@
 
 #include "_common.h"
 #include "_graph.h"
-//#include "_list_.h"
-//#include "_component_.h"
+#include "_list_.h"
+#include "_component_.h"
 
 #endif
